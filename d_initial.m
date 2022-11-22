@@ -13,11 +13,15 @@
 %    See License_ROMS.txt                           Hernan G. Arango      %
 %=========================================================================%
 
+addpath(genpath('/Users/joao/software/matlab2'))
+addpath /Users/joao/software/roms_wilkin/matlab
+addpath /Users/joao/software/matlab-roms
+
 %  Set input/output NetCDF files.
 
  my_root = '/Users/joao/SEAS/Models/Masfjorden/GS2019114_M24';
 
- GRDname = fullfile(my_root, 'mf_1d_grd.nc');
+ GRDname = fullfile(my_root,'Data','mf_1d_grd.nc');
  OAname  = fullfile(my_root, 'Data/OA',      'oa4_lev94_feb.nc');
 %INIname = fullfile(my_root, 'Data/netcdf3', 'damee4_levfeb_b.nc');
 
@@ -309,7 +313,6 @@ load('/Users/joao/SEAS/Data/Masfjorden/CTD-data/GEOSARS_2019/CTD/GS2019_Calibrat
 
 stationCTDIndex = 3;
 
-
 stationCTDPressure2=CTD(stationCTDIndex).P(1:end-1)';
 stationCTDFluorescence=CTD(stationCTDIndex).flC(1:end-1)';
 
@@ -323,6 +326,7 @@ zroms=-1*squeeze(z_r(1,1,:));
 
 iniTemp = interp1(stationCTDDepth,stationCTDTemperature,zroms,'linear','extrap');
 iniSalt = interp1(stationCTDDepth,stationCTDSalinity,zroms,'linear','extrap');
+iniSig = interp1(stationCTDDepth,stationCTDDensityAnomaly,zroms,'linear','extrap');
 iniOxygen = interp1(stationCTDDepth,stationCTDOxygen,zroms,'linear','extrap');
 
 figure
@@ -428,17 +432,17 @@ tmp=permute(repmat(iniSalt,1,1,Lr,Mr),[4 3 1 2]);
 
 [~]=nc_write(INIname, 'salt', tmp, IniRec);
 
-% Write bio vars
+% Write bio vars (convert units if necessary)
 
-tmp=permute(repmat(iniOxygen,1,1,Lr,Mr),[4 3 1 2]);
+tmp=permute(repmat(iniOxygen*44.4,1,1,Lr,Mr),[4 3 1 2]);
 
 [~]=nc_write(INIname, 'oxygen', tmp, IniRec);
 
-tmp=permute(repmat(iniNO3,1,1,Lr,Mr),[4 3 1 2]);
+tmp=permute(repmat(iniNO3*1.0,1,1,Lr,Mr),[4 3 1 2]);
 
 [~]=nc_write(INIname, 'NO3', tmp, IniRec);
 
-tmp=permute(repmat(iniNH4,1,1,Lr,Mr),[4 3 1 2]);
+tmp=permute(repmat(iniNH4*1.0,1,1,Lr,Mr),[4 3 1 2]);
 
 [~]=nc_write(INIname, 'NH4', tmp, IniRec);
 
@@ -450,31 +454,31 @@ tmp=permute(repmat(iniZoo,1,1,Lr,Mr),[4 3 1 2]);
 
 [~]=nc_write(INIname, 'zooplankton', tmp, IniRec);
 
-tmp=permute(repmat(iniChl,1,1,Lr,Mr),[4 3 1 2]);
+tmp=permute(repmat(iniChl*1.0,1,1,Lr,Mr),[4 3 1 2]);
 
 [~]=nc_write(INIname, 'chlorophyll', tmp, IniRec);
 
-tmp=permute(repmat(iniTIC,1,1,Lr,Mr),[4 3 1 2]);
+tmp=permute(repmat(iniTIC.*(1000+iniSig)/1000,1,1,Lr,Mr),[4 3 1 2]);
 
 [~]=nc_write(INIname, 'TIC', tmp, IniRec);
 
-tmp=permute(repmat(iniALK,1,1,Lr,Mr),[4 3 1 2]);
+tmp=permute(repmat(iniALK.*(1000+iniSig)/1000,1,1,Lr,Mr),[4 3 1 2]);
 
 [~]=nc_write(INIname, 'alkalinity', tmp, IniRec);
 
-tmp=permute(repmat(iniLdN,1,1,Lr,Mr),[4 3 1 2]);
+tmp=permute(repmat(iniLdN*1.0,1,1,Lr,Mr),[4 3 1 2]);
 
 [~]=nc_write(INIname, 'LdetritusN', tmp, IniRec);
 
-tmp=permute(repmat(iniLdC,1,1,Lr,Mr),[4 3 1 2]);
+tmp=permute(repmat(iniLdC*1.0,1,1,Lr,Mr),[4 3 1 2]);
 
 [~]=nc_write(INIname, 'LdetritusC', tmp, IniRec);
 
-tmp=permute(repmat(iniSdN,1,1,Lr,Mr),[4 3 1 2]);
+tmp=permute(repmat(iniSdN*1.0,1,1,Lr,Mr),[4 3 1 2]);
 
 [~]=nc_write(INIname, 'SdetritusN', tmp, IniRec);
 
-tmp=permute(repmat(iniSdC,1,1,Lr,Mr),[4 3 1 2]);
+tmp=permute(repmat(iniSdC*1.0,1,1,Lr,Mr),[4 3 1 2]);
 
 [~]=nc_write(INIname, 'SdetritusC', tmp, IniRec);
 
