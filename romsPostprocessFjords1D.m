@@ -581,12 +581,18 @@ bioParVariables={'AttSW';...
 
   nPlot = romsGrid.N;
   zPlot = squeeze(romsGrid.z_r(3,3,:));
+  wPlot = squeeze(romsGrid.z_w(3,3,:));
   kBasin = find(zPlot<-1*depthSill,1,'last');
+  k100 = find(zPlot>=-1*100.,1,'first');
+  k40 = find(zPlot>=-1*40.,1,'first');
 
   cellThickness = diff(romsGrid.z_w,1,3);
-  cellVolume = repmat(cellArea,[1 1 romsGrid.N]).*cellThickness;
+  cellVolume = repmat(cellArea,[1 1 nPlot]).*cellThickness;
+  cellVolume = squeeze(cellVolume(3,3,:));
 
-  basinVolume = sum(sum(sum(cellVolume(:,:,1:kBasin))));
+
+  basinVolume = sum(cellVolume(1:kBasin));
+  vol100 = sum(cellVolume(k100:nPlot));
 
 % +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 % Plot parameters
@@ -599,3 +605,261 @@ bioParVariables={'AttSW';...
 % Figure counter
 
   kf = 0;
+
+% +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+% Plot model evolution
+% +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+% T,S contour plots (upper 100m)
+
+  nPlot = romsGrid.N;
+  zMap = repmat(squeeze(romsGrid.z_r(1,1,:)),[1 nTimes]);
+  zMapDia = repmat(squeeze(romsGrid.z_r(1,1,:)),[1 nDiaTimes]);
+  tMap = repmat(romsTime,[nPlot 1]);
+  tMapDia = repmat(diaTime,[nPlot 1]);
+  
+  kf=kf+1;
+  figure(kf) % Temp, salt, rho
+  subplot 311
+  plotVar = 'temp';
+  index = find(strcmp(plotVariables, plotVar));
+  plotVarUnits = plotVariablesUnits{index};
+  plotMap=[];
+  for i=1:nRomsData
+      plotMap = [plotMap squeeze(ncread(romsDataFile{i},plotVar,[3 3 k100 1],[1 1 Inf Inf]))];
+  end
+  v=5:14;
+  [C,H] = contour(datenum(tMap(k100:end,:)),zMap(k100:end,:),plotMap,v,...
+      '-k','LineWidth',1.5);
+  clabel(C,H,'FontSize',12,'Color','red')
+  xlabel('Time')
+  datetick('x','mm/yyyy','keeplimits')
+  ylabel('z (m)')
+  set(gca,'FontSize',14)
+  title([plotVar ' (' plotVarUnits ')'])
+  
+  subplot 312
+  plotVar = 'salt';
+  index = find(strcmp(plotVariables, plotVar));
+  plotVarUnits = plotVariablesUnits{index};
+  plotMap=[];
+  for i=1:nRomsData
+      plotMap = [plotMap squeeze(ncread(romsDataFile{i},plotVar,[3 3 k100 1],[1 1 Inf Inf]))];
+  end
+  v=21.6:0.8:35.2;
+  [C,H] = contour(datenum(tMap(k100:end,:)),zMap(k100:end,:),plotMap,v,...
+      '-k','LineWidth',1.5);
+  clabel(C,H,'FontSize',12,'Color','red')
+  xlabel('Time')
+  datetick('x','mm/yyyy','keeplimits')
+  ylabel('z (m)')
+  set(gca,'FontSize',14)
+  title([plotVar ' (' plotVarUnits ')'])
+
+  subplot 313
+  plotVar = 'rho';
+  index = find(strcmp(plotVariables, plotVar));
+  plotVarUnits = plotVariablesUnits{index};
+  plotMap=[];
+  for i=1:nRomsData
+      plotMap = [plotMap squeeze(ncread(romsDataFile{i},plotVar,[3 3 k100 1],[1 1 Inf Inf]))];
+  end
+  v=22:0.5:27;
+  [C,H] = contour(datenum(tMap(k100:end,:)),zMap(k100:end,:),plotMap,v,...
+      '-k','LineWidth',1.5);
+  clabel(C,H,'FontSize',12,'Color','red')
+  xlabel('Time')
+  datetick('x','mm/yyyy','keeplimits')
+  ylabel('z (m)')
+  set(gca,'FontSize',14)
+  title([plotVar ' (' plotVarUnits ')'])
+  
+  %sgtitle(TITLE)
+  set(gcf,'Position',[497   206   934   1012])
+  print('TSUpper100m.png','-r200', '-dpng')
+  close
+
+% Stratitification and Vertical mixing profiles on January, April, July,
+% October
+
+  nProfiles = 4; % January, April, July, October
+ 
+  year0=year(romsTime(1));
+  year1=year(romsTime(end));
+
+  profileMonths=[1 4 7 10];
+
+  dateProfiles = [];
+  idxProfiles = [];
+
+  for y=year0:year1
+      for m=1:3:10
+
+          dateProfiles=[dateProfiles datetime(y,m,15,12,0,0)];
+
+          deltaT = abs(romsTime-datetime(y,m,15,12,0,0));
+
+          idxProfiles=[idxProfiles find(deltaT==min(deltaT),1,'first')];
+
+      end
+  end
+
+  idxProfiles=idxProfiles(idxProfiles>1 & idxProfiles<nTimes);
+
+  idxProfiles=reshape(idxProfiles,nProfiles,year1-year0);
+
+  profileRho=zeros(nPlot,3,nProfiles);
+  profileRhoZ=zeros(nPlot,nProfiles);
+  profileAkt=zeros(nPlot+1,3,nProfiles);
+
+  dZr=zPlot(3:end)-zPlot(1:end-2);
+  i=1;
+  for j=1:nProfiles
+
+      % Rho
+      plotVar='rho';
+      map=squeeze(ncread(romsDataFile{i},plotVar,[3 3 1 1],[1 1 Inf Inf]));
+      profileRho(:,1,j)=min(map(:,idxProfiles(j,:)),[],2);
+      profileRho(:,2,j)=mean(map(:,idxProfiles(j,:)),2);
+      profileRho(:,3,j)=max(map(:,idxProfiles(j,:)),[],2);
+      tmp=profileRho(3:end,2,j)-profileRho(1:end-2,2,j);
+      
+      profileRhoZ(2:end-1,j)=tmp./dZr;
+
+      % Akt
+      plotVar='AKt';
+      map=squeeze(ncread(romsDataFile{i},plotVar,[3 3 1 1],[1 1 Inf Inf]));
+      profileAkt(:,1,j)=min(map(:,idxProfiles(j,:)),[],2);
+      profileAkt(:,2,j)=mean(map(:,idxProfiles(j,:)),2);
+      profileAkt(:,3,j)=max(map(:,idxProfiles(j,:)),[],2);
+
+  end
+
+  kf=kf+1;
+  figure(kf) % Rho profiles
+  plotVar = 'rho';
+  index = find(strcmp(plotVariables, plotVar));
+  plotVarUnits = plotVariablesUnits{index};
+  titles={'January','April','July','October'};
+  for i=1:nProfiles
+      subplot (2,2,i)
+      ha=plot(profileRho(:,2,i),zPlot,'-r','LineWidth',2);
+      % Plot max/min range
+      xP=[profileRho(:,1,i);flipud(profileRho(:,3,i))];
+      yP=[zPlot;flipud(zPlot)];
+      hb=patch(xP,yP,'r','FaceAlpha',.3);
+      xlabel([plotVar ' (' plotVarUnits ')'])
+      ylabel('z (m)')
+      legend('\sigma(z)','d\sigma(z)/dz')
+      grid on
+      %title(titles{i})
+      axis([22 30 -480 0])
+      hAx(1)=gca;
+      set(hAx(1),'FontSize',14)
+      hAx(2)=axes('Position',hAx(1).Position,'XAxisLocation','top','YAxisLocation','right','color','none');
+      hold(hAx(2),'on')
+      %plot(hAx(2),x2,y1)
+      hc=plot(hAx(2),profileRhoZ(:,i),zPlot,'-c','LineWidth',2);
+      set(hAx(2),'FontSize',14)
+      hAx(2).YLim=[-480 0];
+      hAx(2).YTick=[];
+      hAx(2).XLabel.String='d\sigma(z)/dz (kg m^{-4})';
+      legend([ha,hb,hc], '\sigma(z)','min/max \sigma(z)','d\sigma(z)/dz',...
+          'Location','southwest');
+  end
+  set(gcf,'Position',[ 680   251   607   726])
+  print('rhoProfiles.png','-r200', '-dpng')
+  close
+
+  kf=kf+1;
+  figure(kf) % Rho profiles
+  plotVar = 'AKt';
+  index = find(strcmp(plotVariables, plotVar));
+  plotVarUnits = plotVariablesUnits{index};
+  titles={'January','April','July','October'};
+  for i=1:nProfiles
+      subplot (2,2,i)
+      plot(profileAkt(:,2,i)*10^4,wPlot,'-r','LineWidth',2)
+      xP=[profileAkt(:,1,i)*10^4;flipud(profileAkt(:,3,i)*10^4)];
+      yP=[wPlot;flipud(wPlot)];
+      patch(xP,yP,'r','FaceAlpha',.3)
+      xlabel(['10^4 ' plotVar ' (' plotVarUnits ')'])
+      ylabel('z (m)')
+      grid on
+      title(titles{i})
+      axis([0 4 -480 0])
+      set(gca,'FontSize',14)
+  end
+  set(gcf,'Position',[ 680   251   607   726])
+  print('aktProfiles.png','-r200', '-dpng')
+  close
+
+% Nutrient profiles in on January, April, July,
+% October
+  
+  profileNO3=zeros(nPlot,3,nProfiles);
+  profileNH4=zeros(nPlot,3,nProfiles);
+
+  i=1;
+  for j=1:nProfiles
+
+      % NO3
+      plotVar='NO3';
+      map=squeeze(ncread(romsDataFile{i},plotVar,[3 3 1 1],[1 1 Inf Inf]));
+      profileNO3(:,1,j)=min(map(:,idxProfiles(j,:)),[],2);
+      profileNO3(:,2,j)=mean(map(:,idxProfiles(j,:)),2);
+      profileNO3(:,3,j)=max(map(:,idxProfiles(j,:)),[],2);
+
+      % NH4
+      plotVar='NH4';
+      map=squeeze(ncread(romsDataFile{i},plotVar,[3 3 1 1],[1 1 Inf Inf]));
+      profileNH4(:,1,j)=min(map(:,idxProfiles(j,:)),[],2);
+      profileNH4(:,2,j)=mean(map(:,idxProfiles(j,:)),2);
+      profileNH4(:,3,j)=max(map(:,idxProfiles(j,:)),[],2);
+
+  end
+
+  kf=kf+1;
+  figure(kf) % NO3,NH4 profiles
+  plotVar = 'NO3';
+  index = find(strcmp(plotVariables, plotVar));
+  plotVarUnits = plotVariablesUnits{index};
+  titles={'Jan.','Apr.','Jul.','Oct.'};
+  for i=1:nProfiles
+      subplot (2,2,i)
+      ha=plot(profileNO3(:,2,i),zPlot,'-r','LineWidth',2);
+      % Plot max/min range
+      xP=[profileNO3(:,1,i);flipud(profileNO3(:,3,i))];
+      yP=[zPlot;flipud(zPlot)];
+      hb=patch(xP,yP,'r','FaceAlpha',.3);
+      xlabel([plotVar ' ' titles{i}  ' (' plotVarUnits ')'])
+      ylabel('z (m)')
+      legend('NO3','min/max NO3')
+      grid on
+      %title(titles{i})
+      axis([0 140 -480 0])
+      hAx(1)=gca;
+      set(hAx(1),'FontSize',14)
+      hAx(2)=axes('Position',hAx(1).Position,'XAxisLocation','top','YAxisLocation','right','color','none');
+      hold(hAx(2),'on')
+      %plot(hAx(2),x2,y1)
+      hc=plot(hAx(2),profileNH4(:,2,i),zPlot,'-c','LineWidth',2);
+      hold on
+      % Plot max/min range
+      xP=[profileNH4(:,1,i);flipud(profileNH4(:,3,i))];
+      yP=[zPlot;flipud(zPlot)];
+      hd=patch(xP,yP,'c','FaceAlpha',.3);
+      set(hAx(2),'FontSize',14)
+      hAx(2).XLim=[0 5];
+      hAx(2).YLim=[-480 0];
+      hAx(2).YTick=[];
+      hAx(2).XLabel.String=['NH4 ' titles{i}   ' (' plotVarUnits ')'];
+      legend([ha,hb,hc,hd], 'NO3','min/max NO3','NH4','min/max NH4',...
+          'Location','southeast');
+  end
+  set(gcf,'Position',[ 680   251   607   726])
+  print('no3Profiles.png','-r200', '-dpng')
+  close
+
+  
+

@@ -25,7 +25,7 @@ addpath /Users/joao/software/matlab-roms
  OAname  = fullfile(my_root, 'Data/OA',      'oa4_lev94_feb.nc');
 %INIname = fullfile(my_root, 'Data/netcdf3', 'damee4_levfeb_b.nc');
 
- INIname = 'm24_ini_gs2019114.nc';
+ INIname = 'm24_ini_gs2019114_2015.nc';
 
 %  Set local variables.
 
@@ -410,7 +410,9 @@ iniSdC = iniSdN;
 
 IniRec = 1;                               % NetCDF time record
 
-S.ocean_time = 7214;                % initial conditions time (s)
+%S.ocean_time = 7214;                % initial conditions time (d)
+% 01.10.2015
+S.ocean_time = 5752;                % initial conditions time (d)
 
 [~]=nc_write(INIname, 'ocean_time', S.ocean_time, IniRec);
 

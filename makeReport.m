@@ -7,7 +7,7 @@ import mlreportgen.report.*
 import mlreportgen.dom.* 
 
 % Create the report object
-rpt = Report(MyAppTITLE,'html'); 
+rpt = Report(MyAppTITLE,'html-file'); 
 
 % Add a title page
 tp = TitlePage; 
@@ -109,43 +109,86 @@ table1.Title = "Parameters of Fennel model";
 table1.Content=bioParTable;
 add(rpt,table1);
 
-% Diagnostics
+% Results
 ch3 = Chapter; 
-ch3.Title = 'Diagnostics'; 
+ch3.Title = 'Results'; 
 % Solution history
 sec6 = Section; 
-sec6.Title = 'Basin Dissoved Oxygen';
+sec6.Title = 'Hydrography';
 
-% Time series of dissolved oxygen and dissolved oxygen consumption rates
+% Temperature, Salinity and Density Anomaly
 image1 = FormalImage();
-image1.Image = which('basinMeanO2.png');
-para = Paragraph(['Figure 3.1 Time series of basin volume-weighted averages of O2, O2 consumption rate' ...
-    'and O2 sediment consumption rate. O2 consumption rate is the sum of zooplankton respiration ' ...
-    ' (negligible in the basin), heterotrophic bacterial respiration and nitrification. The volume-weighted ' ...
-    'average is computed between bottom and sill depth.']);
-image1.Caption = para;
-image1.Height = '14.81cm';
-image1.Width = '25.75cm';
+image1.Image = which('TSUpper100m.png');
+image1.Caption = ['Hydrography in the upper 100 m. Top: temperature; '...
+    'Middle: salinity; Bottom: density anomaly.'];
+image1.Height = '24.75cm';
+image1.Width = '25.5cm';
 add(sec6,image1);
 
-% Time series of dissolved oxygen and dissolved oxygen consumption rates
+% Average January, April, July, October profiles of density anomaly and
+% density gradient
 image2 = FormalImage();
-image2.Image = which('basinMeanRespNit.png');
-para = Paragraph(['Figure 3.2 Time series of basin volume-weighted averages of Zooplankton respiration, ' ...
-    'heteretrophic bacteria respiration and nitrification. The volume-weighted ' ...
-    'average is computed between bottom and sill depth.']);
-image2.Caption = para;
-image2.Height = '14.81cm';
-image2.Width = '25.75cm';
+image2.Image = which('rhoProfiles.png');
+image2.Caption = ['Average profiles of density anomaly and density anomaly gradient.'...
+    ' Top left: January; Top right: April; Bottom left: July; Bottom right: October'];
+image2.Height = '25.6117cm';
+image2.Width = '21.4136cm';
 add(sec6,image2);
 
+% Average January, April, July, October profiles of vertical mixing
+image2 = FormalImage();
+image2.Image = which('aktProfiles.png');
+image2.Caption = ['Average profiles of vertical diffusivity.'...
+    ' Top left: January; Top right: April; Bottom left: July; Bottom right: October'];
+image2.Height = '25.6117cm';
+image2.Width = '21.4136cm';
+add(sec6,image2);
 
+% Average January, April, July, October profiles of NO3 and NH4
+image2 = FormalImage();
+image2.Image = which('no3Profiles.png');
+image2.Caption = ['Average profiles of NO3 and NH4.'...
+    ' Top left: January; Top right: April; Bottom left: July; Bottom right: October'];
+image2.Height = '25.6117cm';
+image2.Width = '21.4136cm';
+add(sec6,image2);
 
 
 append(ch3,sec6)
 append(rpt,ch3); 
 
+% Diagnostics
+ch4 = Chapter; 
+ch4.Title = 'Diagnostics'; 
+% Solution history
+sec7 = Section; 
+sec7.Title = 'Basin Dissolved Oxygen Concentration and Consumption Rate';
+
+para = Paragraph(['Oxygen consumption has two components: nitrification ' ...
+    'and respiration. These oxygen sinks are described by the following terms in eq. (1) of Fennel et al. (2013):']);
+append(sec7,para)
+add(sec7,Equation('-2\hat{n}NH4-R_{O2:NH4}(lZoo+\hat{r}_{SD}SDet+\hat{r}_{LD}LDet)'));% - R_{O2:NH4} \( lZoo+ r_{SD} SDet + r_{LD} LDet \)'));
+para = Paragraph(['The first term is the nitrification sink with \hat{n} '...
+    'the nitrification flux. The second term is the oxygen due to zooplankton '...
+    'and heterotrohic bacteria, with $l$ the zooplankton excretion rate '...
+    ' and \hat{r}_{SD} and \hat{r}_{LD} the remineralization rates of '...
+    'small and large detritus.']);
+append(sec7,para)
+% Oxygen in the basin
+image2 = FormalImage();
+image2.Image = which('basinMeanO2.png');
+image2.Caption = ['Basin oxygen. Top: Oxygen concentration; Middle: oxygen '...
+'consumption rate; Bottom: Volume averaged oxygen concentration and consumption '...
+ 'rate.'];
+image2.Height = '23.55cm'; 
+image2.Width = '23.55cm';
+add(sec7,image2);
+
+
+append(ch4,sec7)
+append(rpt,ch4); 
+
 % Finalize report
 close(rpt)
-rptview(rpt)
+%rptview(rpt)
 

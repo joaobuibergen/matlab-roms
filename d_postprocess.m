@@ -6,9 +6,9 @@
 close all
 clear variables
 
-addpath /Users/joao/software/matlab-roms
 addpath(genpath('/Users/joao/software/matlab2'))
 addpath /Users/joao/software/roms_wilkin/matlab
+addpath /Users/joao/software/matlab-roms
 
 % Add necessary folders to PATH env variable
 path1 = getenv('PATH');
@@ -30,11 +30,18 @@ romsLog = dir([cwd '/Output/log.*' romsID]);
 
 disp([' Reading info from log file: ' romsLog.name])
 
+% Run postprocessing
+
+disp(' Running postprocessing')
+
+romsPostprocessFjords1D
+
+
 % Run diagnostics
 
-disp(' Running diagnostics')
+%disp(' Running diagnostics')
 
-romsDiagnosticsFjords1D
+%romsDiagnosticsFjords1D
 % 
 % % Write html report
 % 
