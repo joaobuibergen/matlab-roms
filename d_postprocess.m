@@ -49,6 +49,8 @@ if ~exist('romsID','var')
     error('Please provide a run ID.')
 end
 
+disp([' Current working directory: ' cwd])
+disp([' ROMS Run ID: ' romsID])
 
 % log file (we use it to read model and run info)
 
