@@ -6,23 +6,49 @@
 close all
 clear variables
 
-addpath(genpath('/Users/joao/software/matlab2'))
-addpath /Users/joao/software/roms_wilkin/matlab
-addpath /Users/joao/software/matlab-roms
+% Get the computer name for path costumization
+[ret, output] = system('hostname');
+output=split(strip(output));
+computerName=output{1};
 
-% Add necessary folders to PATH env variable
-path1 = getenv('PATH');
-path1 = [path1 ':/opt/local/bin'];
-setenv('PATH', path1);
-!echo $PATH
+if strcmp(computerName,'fvfh70lhq05p.klientdrift.uib.no')
 
-% Get the cwd
+    addpath(genpath('/Users/joao/software/matlab2'))
+    addpath /Users/joao/software/roms_wilkin/matlab
+    addpath /Users/joao/software/matlab-roms
 
-cwd = pwd;
+    % Add necessary folders to PATH env variable
+    path1 = getenv('PATH');
+    path1 = [path1 ':/opt/local/bin'];
+    setenv('PATH', path1);
+    !echo $PATH
+
+elseif strcmp(computerName,'cyclone.hpc.uib.no')
+
+    addpath(genpath('/home/johor1356/software/matlab_roms'))
+    addpath /home/johor1356/software/roms_wilkin/matlab
+    addpath /home/johor1356/software/matlab-roms
+
+    % Add necessary folders to PATH env variable
+    path1 = getenv('PATH');
+    path1 = [path1 ':/opt/bin'];
+    setenv('PATH', path1);
+    !echo $PATH
+
+end
+
+% Get the cwd if it wasn't supplied by the script invocation
+
+if ~exist('cwd','var')
+    cwd = pwd;
+end
 
 % Run identifier
 
-romsID='TEST1';
+if ~exist('romsID','var')
+    error('Please provide a run ID.')
+end
+
 
 % log file (we use it to read model and run info)
 
