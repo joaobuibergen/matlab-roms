@@ -4,7 +4,6 @@
 % 
 
 close all
-clear variables
 
 % Get the computer name for path costumization
 [ret, output] = system('hostname');
