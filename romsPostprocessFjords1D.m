@@ -222,17 +222,17 @@ romsOutputFolder = [str{1} '/output']
 % Get the names of initial, forcing and output files. If multiple files,
 % get their names as a list.
 
-  romsIniFile = ncreadatt([fullfile(romsOutputFolder,MyAppTITLE) '_his.nc'],'/','ini_file');
+  romsIniFile = ncreadatt(romsDataFile{1},'/','ini_file');
   disp(['Roms IC File: ' romsIniFile])
-  romsFrcFile = strip(split(ncreadatt([fullfile(romsOutputFolder,MyAppTITLE) '_his.nc'],'/','frc_file_01'),','));
+  romsFrcFile = strip(split(ncreadatt(romsDataFile{1},'/','frc_file_01'),','));
   disp(['Roms Forcing Files: ' strjoin(romsFrcFile)])
   nRomsFrc = length(romsFrcFile);
-  romsGridFile = ncreadatt([fullfile(romsOutputFolder,MyAppTITLE) '_his.nc'],'/','grd_file');
+  romsGridFile = ncreadatt(romsDataFile{1},'/','grd_file');
   disp(['Roms Grid File: ' romsGridFile])
-  romsAvgFile = strip(split(ncreadatt([fullfile(romsOutputFolder,MyAppTITLE) '_his.nc'],'/','avg_file'),','));
+  romsAvgFile = strip(split(ncreadatt(romsDataFile{1},'/','avg_file'),','));
   disp(['Roms Averages Files: ' romsAvgFile])
   nRomsAvg = length(romsAvgFile);
-  romsDiaFile = strip(split(ncreadatt([fullfile(romsOutputFolder,MyAppTITLE) '_his.nc'],'/','dia_file'),','));
+  romsDiaFile = strip(split(ncreadatt(romsDataFile{1},'/','dia_file'),','));
   disp(['Roms Diagnostic Files: ' romsDiaFile])
   nRomsDia = length(romsDiaFile);
 
@@ -243,28 +243,28 @@ romsOutputFolder = [str{1} '/output']
 % Get CPP options, model version, run dir, run date
 
   %romsCPP = split(ncreadatt(romsDataFile,'/','CPP_options'),',');%roms_cpplist([lower(MyAppCPP) '.h']);
-  romsCPP = string(roms_cpplist([fullfile(romsLog.folder,MyAppTITLE) '_his.nc']));
-  getStr = split(ncreadatt([fullfile(romsLog.folder,MyAppTITLE) '_his.nc'],'/','history'),',');
+  romsCPP = string(roms_cpplist(romsDataFile{1}));
+  getStr = split(ncreadatt(romsDataFile{1},'/','history'),',');
   romsVersion = [getStr{1} ' ' getStr{2} ' rev. '...
-      ncreadatt([fullfile(romsLog.folder,MyAppTITLE) '_his.nc'],'/','svn_rev')];
+      ncreadatt(romsDataFile{1},'/','svn_rev')];
   
   runDateTime = [getStr{3} ', ' getStr{4}];
   
-  romsRunDir = ncreadatt([fullfile(romsLog.folder,MyAppTITLE) '_his.nc'],'/','header_dir');
-  romsSourceDir = ncreadatt([fullfile(romsLog.folder,MyAppTITLE) '_his.nc'],'/','code_dir');
+  romsRunDir = ncreadatt(romsDataFile{1},'/','header_dir');
+  romsSourceDir = ncreadatt(romsDataFile{1},'/','code_dir');
   
 % Get baroclinic time step, barotropic time step and number of time steps between output
   
-  romsDt = ncread([fullfile(romsLog.folder,MyAppTITLE) '_his.nc'],'dt');
-  romsDtFast = ncread([fullfile(romsLog.folder,MyAppTITLE) '_his.nc'],'dtfast');
+  romsDt = ncread(romsDataFile{1},'dt');
+  romsDtFast = ncread(romsDataFile{1},'dtfast');
   
   %if strcmp(fileType,'his')
   
-      romsNHisOut = ncread([fullfile(romsLog.folder,MyAppTITLE) '_his.nc'],'nHIS');
+      romsNHisOut = ncread(romsDataFile{1},'nHIS');
   
   %elseif strcmp(fileType,'avg')
       
-      romsNAvgOut = ncread([fullfile(romsLog.folder,MyAppTITLE) '_his.nc'],'nAVG');
+      romsNAvgOut = ncread(romsDataFile{1},'nAVG');
       
   %end
   
