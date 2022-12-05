@@ -210,8 +210,8 @@
 
 str=split(cmdout,'//');
 
-romsOutputFolder = str{1}
- 
+romsOutputFolder = [str{1} '/output']
+
 % Data files
   
   romsDataFile = strip(split(ncreadatt([fullfile(romsOutputFolder,MyAppTITLE) '_his.nc'],'/',...
