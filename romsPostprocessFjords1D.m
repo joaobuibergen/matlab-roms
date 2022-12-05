@@ -225,7 +225,7 @@ romsOutputFolder = [str{1} '/output']
   romsIniFile = ncreadatt([fullfile(romsOutputFolder,MyAppTITLE) '_his.nc'],'/','ini_file');
   disp(['Roms IC File: ' romsIniFile])
   romsFrcFile = strip(split(ncreadatt([fullfile(romsOutputFolder,MyAppTITLE) '_his.nc'],'/','frc_file_01'),','));
-  disp(['Roms Forcing Files: ' romsFrcFile])
+  disp(['Roms Forcing Files: ' strjoin(romsFrcFile)])
   nRomsFrc = length(romsFrcFile);
   romsGridFile = ncreadatt([fullfile(romsOutputFolder,MyAppTITLE) '_his.nc'],'/','grd_file');
   disp(['Roms Grid File: ' romsGridFile])
