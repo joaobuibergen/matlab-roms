@@ -229,7 +229,7 @@ romsOutputFolder = [str{1} '/output']
   nRomsFrc = length(romsFrcFile);
   romsGridFile = ncreadatt([fullfile(romsOutputFolder,MyAppTITLE) '_his.nc'],'/','grd_file');
   disp(['Roms Grid File: ' romsGridFile])
-  romsAvgFile = strip(split(ncreadatt([fullfile(romsOutpuFolder,MyAppTITLE) '_his.nc'],'/','avg_file'),','));
+  romsAvgFile = strip(split(ncreadatt([fullfile(romsOutputFolder,MyAppTITLE) '_his.nc'],'/','avg_file'),','));
   disp(['Roms Averages Files: ' romsAvgFile])
   nRomsAvg = length(romsAvgFile);
   romsDiaFile = strip(split(ncreadatt([fullfile(romsOutputFolder,MyAppTITLE) '_his.nc'],'/','dia_file'),','));
