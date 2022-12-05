@@ -203,10 +203,18 @@
 % +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 % Get grid and other metadata 
 % +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+% Output folder
+
+[status,cmdout] = system(strjoin(["gawk '/Output Restart File:/ {print $4}' " fullfile(romsLog.folder,romsLog.name)]));
+
+str=split(cmdout,'//');
+
+romsOutputFolder = str{1}
  
 % Data files
   
-  romsDataFile = strip(split(ncreadatt([fullfile(romsLog.folder,MyAppTITLE) '_his.nc'],'/',...
+  romsDataFile = strip(split(ncreadatt([fullfile(romsOutputFolder,MyAppTITLE) '_his.nc'],'/',...
       [ fileType '_file']),','));
 
   nRomsData = length(romsDataFile);
