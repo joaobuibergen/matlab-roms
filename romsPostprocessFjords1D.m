@@ -222,17 +222,17 @@ romsOutputFolder = [str{1} '/output']
 % Get the names of initial, forcing and output files. If multiple files,
 % get their names as a list.
 
-  romsIniFile = ncreadatt([fullfile(romsLog.folder,MyAppTITLE) '_his.nc'],'/','ini_file');
+  romsIniFile = ncreadatt([fullfile(romsOutputFolder,MyAppTITLE) '_his.nc'],'/','ini_file');
   disp(['Roms IC File: ' romsIniFile])
-  romsFrcFile = strip(split(ncreadatt([fullfile(romsLog.folder,MyAppTITLE) '_his.nc'],'/','frc_file_01'),','));
+  romsFrcFile = strip(split(ncreadatt([fullfile(romsOutputFolder,MyAppTITLE) '_his.nc'],'/','frc_file_01'),','));
   disp(['Roms Forcing Files: ' romsFrcFile])
   nRomsFrc = length(romsFrcFile);
-  romsGridFile = ncreadatt([fullfile(romsLog.folder,MyAppTITLE) '_his.nc'],'/','grd_file');
+  romsGridFile = ncreadatt([fullfile(romsOutputFolder,MyAppTITLE) '_his.nc'],'/','grd_file');
   disp(['Roms Grid File: ' romsGridFile])
-  romsAvgFile = strip(split(ncreadatt([fullfile(romsLog.folder,MyAppTITLE) '_his.nc'],'/','avg_file'),','));
+  romsAvgFile = strip(split(ncreadatt([fullfile(romsOutpuFolder,MyAppTITLE) '_his.nc'],'/','avg_file'),','));
   disp(['Roms Averages Files: ' romsAvgFile])
   nRomsAvg = length(romsAvgFile);
-  romsDiaFile = strip(split(ncreadatt([fullfile(romsLog.folder,MyAppTITLE) '_his.nc'],'/','dia_file'),','));
+  romsDiaFile = strip(split(ncreadatt([fullfile(romsOutputFolder,MyAppTITLE) '_his.nc'],'/','dia_file'),','));
   disp(['Roms Diagnostic Files: ' romsDiaFile])
   nRomsDia = length(romsDiaFile);
 
