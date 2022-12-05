@@ -14,7 +14,7 @@ if strcmp(computerName,'fvfh70lhq05p.klientdrift.uib.no')
 
     addpath(genpath('/Users/joao/software/matlab2'))
     addpath /Users/joao/software/roms_wilkin/matlab
-    addpath /Users/joao/software/matlab-roms
+    %addpath /Users/joao/software/matlab-roms
 
     % Add necessary folders to PATH env variable
     path1 = getenv('PATH');
@@ -26,7 +26,7 @@ elseif strcmp(computerName,'cyclone.hpc.uib.no')
 
     addpath(genpath('/home/johor1356/software/matlab_roms'))
     addpath /home/johor1356/software/roms_wilkin/matlab
-    addpath /home/johor1356/software/matlab-roms
+    %addpath /home/johor1356/software/matlab-roms
 
     % Add necessary folders to PATH env variable
     path1 = getenv('PATH');
@@ -53,7 +53,7 @@ disp([' ROMS Run ID: ' romsID])
 
 % log file (we use it to read model and run info)
 
-romsLog = dir([cwd '/Output/log.*' romsID]);
+romsLog = dir([cwd 'log.*' romsID]);
 
 disp([' Reading info from log file: ' romsLog.name])
 
