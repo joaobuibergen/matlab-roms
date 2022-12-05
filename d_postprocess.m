@@ -55,7 +55,7 @@ disp([' ROMS Run ID: ' romsID])
 
 romsLog = fullfile(cwd, ['log.' romsID]);
 
-disp([' Reading info from log file: ' romsLog.name])
+disp([' Reading info from log file: ' romsLog])
 
 % Run postprocessing
 
