@@ -53,7 +53,7 @@ disp([' ROMS Run ID: ' romsID])
 
 % log file (we use it to read model and run info)
 
-romsLog = dir([cwd 'log.*' romsID]);
+romsLog = fullfile(cwd, ['log.' romsID]);
 
 disp([' Reading info from log file: ' romsLog.name])
 
