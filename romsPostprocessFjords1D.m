@@ -874,7 +874,7 @@ bioParVariables={'AttSW';...
   end
   set(gcf,'Position',[ 680   251   607   726])
   print('no3Profiles.png','-r200', '-dpng')
-  close
+  close all
 
   
 
