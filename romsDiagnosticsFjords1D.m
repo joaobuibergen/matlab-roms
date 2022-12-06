@@ -439,8 +439,8 @@
           slNO3 = [slNO3 squeeze(sum(tmp(kBasin:ke(min(j,length(ke))),j).*...
               cellVolume(kBasin:ke(min(j,length(ke))))))/slVolume(min(j,length(ke)))];
 
-          baNO3 = [baNO3 squeeze(sum(tmp(1:kBasin)),j).*...
-              cellVolume(1:kBasin)/basinVolume];
+          baNO3 = [baNO3 squeeze(sum(tmp(1:kBasin,j).*...
+              cellVolume(1:kBasin)))/basinVolume];
 
       end
       
@@ -454,8 +454,8 @@
           slNH4 = [slNH4 squeeze(sum(tmp(kBasin:ke(min(j,length(ke))),j).*...
               cellVolume(kBasin:ke(min(j,length(ke))))))/slVolume(min(j,length(ke)))];
 
-          baNH4 = [baNH4 squeeze(sum(tmp(1:kBasin)),j).*...
-              cellVolume(1:kBasin)/basinVolume];
+          baNH4 = [baNH4 squeeze(sum(tmp(1:kBasin,j).*...
+              cellVolume(1:kBasin)))/basinVolume];
 
       end
 
@@ -520,8 +520,8 @@
           slZoR = [slZoR squeeze(sum(tmp(kBasin:ke(min(j,length(ke))),j).*...
               cellVolume(kBasin:ke(min(j,length(ke))))))/slVolume(min(j,length(ke)))];
 
-          baZoR = [baZoR squeeze(sum(tmp(1:kBasin)),j).*...
-              cellVolume(1:kBasin)/basinVolume];
+          baZoR = [baZoR squeeze(sum(tmp(1:kBasin,j).*...
+              cellVolume(1:kBasin)))/basinVolume];
 
       end
 
@@ -535,8 +535,8 @@
           slBaR = [slBaR squeeze(sum(tmp(kBasin:ke(min(j,length(ke))),j).*...
               cellVolume(kBasin:ke(min(j,length(ke))))))/slVolume(min(j,length(ke)))];
 
-          baBaR = [baBaR squeeze(sum(tmp(1:kBasin)),j).*...
-              cellVolume(1:kBasin)/basinVolume];
+          baBaR = [baBaR squeeze(sum(tmp(1:kBasin,j).*...
+              cellVolume(1:kBasin)))/basinVolume];
 
       end
 
@@ -550,8 +550,8 @@
           slNit = [slNit 2.0*squeeze(sum(tmp(kBasin:ke(min(j,length(ke))),j).*...
               cellVolume(kBasin:ke(min(j,length(ke))))))/slVolume(min(j,length(ke)))];
 
-          baNit = [baNit 2.0*squeeze(sum(tmp(1:kBasin)),j).*...
-              cellVolume(1:kBasin)/basinVolume];
+          baNit = [baNit 2.0*squeeze(sum(tmp(1:kBasin,j).*...
+              cellVolume(1:kBasin)))/basinVolume];
 
       end
 
