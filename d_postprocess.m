@@ -66,9 +66,9 @@ romsPostprocessFjords1D
 
 % Run diagnostics
 
-%disp(' Running diagnostics')
+disp(' Running diagnostics')
 
-%romsDiagnosticsFjords1D
+romsDiagnosticsFjords1D
 
 % Write html report
 
