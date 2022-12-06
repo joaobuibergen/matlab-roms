@@ -69,10 +69,10 @@ romsPostprocessFjords1D
 %disp(' Running diagnostics')
 
 %romsDiagnosticsFjords1D
-% 
-% % Write html report
-% 
-% disp(' Writing report diagnostics')
-% 
-% makeReport
+
+% Write html report
+
+disp(' Writing report diagnostics')
+
+makeReport
 
