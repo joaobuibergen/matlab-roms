@@ -240,6 +240,8 @@ romsOutputFolder = [str{1} '/output']
 
   romsGrid = get_roms_grid(romsGridFile, romsDataFile{1});
   
+  romsGrid = get_roms_grid(romsGrid, romsDataFile{1});
+  
 % Get CPP options, model version, run dir, run date
 
   %romsCPP = split(ncreadatt(romsDataFile,'/','CPP_options'),',');%roms_cpplist([lower(MyAppCPP) '.h']);
