@@ -429,7 +429,7 @@
 
       dataInfo = ncinfo(romsDataFile{i});
 
-      tmp = ncread(romsDataFile{i},'NO3',[3 3 1 1],[1 1 Inf Inf]);
+      tmp = squeeze(ncread(romsDataFile{i},'NO3',[3 3 1 1],[1 1 Inf Inf]));
 
       for j=1:dataInfo.Dimensions(14).Length
 
@@ -444,7 +444,7 @@
 
       end
       
-      tmp = ncread(romsDataFile{i},'NH4',[3 3 1 1],[1 1 Inf Inf]);
+      tmp = squeeze(ncread(romsDataFile{i},'NH4',[3 3 1 1],[1 1 Inf Inf]));
 
       for j=1:dataInfo.Dimensions(14).Length
 
@@ -510,7 +510,7 @@
 
       diaInfo = ncinfo(romsDiaFile{i});
 
-      tmp = ncread(romsDiaFile{i},'Zoo_respiration',[3 3 1 1],[1 1 Inf Inf]);
+      tmp = squeeze(ncread(romsDiaFile{i},'Zoo_respiration',[3 3 1 1],[1 1 Inf Inf]));
 
       for j=1:diaInfo.Dimensions(13).Length
 
@@ -525,7 +525,7 @@
 
       end
 
-      tmp = ncread(romsDiaFile{i},'Bac_respiration',[3 3 1 1],[1 1 Inf Inf]);
+      tmp = squeeze(ncread(romsDiaFile{i},'Bac_respiration',[3 3 1 1],[1 1 Inf Inf]));
 
       for j=1:diaInfo.Dimensions(13).Length
 
@@ -540,7 +540,7 @@
 
       end
 
-      tmp = ncread(romsDiaFile{i},'Nitrif_flux',[3 3 1 1],[1 1 Inf Inf]);
+      tmp = squeeze(ncread(romsDiaFile{i},'Nitrif_flux',[3 3 1 1],[1 1 Inf Inf]));
 
       for j=1:diaInfo.Dimensions(13).Length
 
@@ -555,7 +555,7 @@
 
       end
 
-      tmp = ncread(romsDiaFile{i},'OM_sinking',[3 3 1 1],[1 1 Inf Inf]);
+      tmp = squeeze(ncread(romsDiaFile{i},'OM_sinking',[3 3 1 1],[1 1 Inf Inf]));
 
       for j=1:diaInfo.Dimensions(13).Length
 
