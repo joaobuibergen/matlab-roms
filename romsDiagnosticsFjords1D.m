@@ -429,29 +429,33 @@
 
       dataInfo = ncinfo(romsDataFile{i});
 
+      tmp = ncread(romsDataFile{i},'NO3',[3 3 1 1],[1 1 Inf Inf]);
+
       for j=1:dataInfo.Dimensions(14).Length
 
-          tmp = ncread(romsDataFile{i},'NO3',[1 1 1 j],[Inf Inf Inf 1]);
+          elNO3 = [elNO3 squeeze(sum(tmp(ke(min(j,length(ke))):romsGrid.N,j).*...
+              cellVolume(ke(min(j,length(ke))):romsGrid.N)))/eVolume(min(j,length(ke)))];
 
-          elNO3 = [elNO3 squeeze(sum(sum(sum(tmp(:,:,ke(min(j,length(ke))):romsGrid.N,:).*...
-              cellVolume(:,:,ke(min(j,length(ke))):romsGrid.N)))))/eVolume(min(j,length(ke)))];
+          slNO3 = [slNO3 squeeze(sum(tmp(kBasin:ke(min(j,length(ke))),j).*...
+              cellVolume(kBasin:ke(min(j,length(ke))))))/slVolume(min(j,length(ke)))];
 
-          slNO3 = [slNO3 squeeze(sum(sum(sum(tmp(:,:,kBasin:ke(min(j,length(ke))),:).*...
-              cellVolume(:,:,kBasin:ke(min(j,length(ke))))))))/eVolume(min(j,length(ke)))];
+          baNO3 = [baNO3 squeeze(sum(tmp(1:kBasin)),j).*...
+              cellVolume(1:kBasin)/basinVolume];
 
-          baNO3 = [baNO3 squeeze(sum(sum(sum(tmp(:,:,1:kBasin,:).*...
-              cellVolume(:,:,1:kBasin)))))/eVolume(min(j,length(ke)))];
+      end
+      
+      tmp = ncread(romsDataFile{i},'NH4',[3 3 1 1],[1 1 Inf Inf]);
 
-          tmp = ncread(romsDataFile{i},'NH4',[1 1 1 j],[Inf Inf Inf 1]);
+      for j=1:dataInfo.Dimensions(14).Length
 
-          elNH4 = [elNH4 squeeze(sum(sum(sum(tmp(:,:,ke(min(j,length(ke))):romsGrid.N,:).*...
-              cellVolume(:,:,ke(min(j,length(ke))):romsGrid.N)))))/eVolume(min(j,length(ke)))];
+          elNH4 = [elNH4 squeeze(sum(tmp(ke(min(j,length(ke))):romsGrid.N,j).*...
+              cellVolume(ke(min(j,length(ke))):romsGrid.N)))/eVolume(min(j,length(ke)))];
           
-          slNH4 = [slNH4 squeeze(sum(sum(sum(tmp(:,:,kBasin:ke(min(j,length(ke))),:).*...
-              cellVolume(:,:,kBasin:ke(min(j,length(ke))))))))/eVolume(min(j,length(ke)))];
+          slNH4 = [slNH4 squeeze(sum(tmp(kBasin:ke(min(j,length(ke))),j).*...
+              cellVolume(kBasin:ke(min(j,length(ke))))))/slVolume(min(j,length(ke)))];
 
-          baNH4 = [baNH4 squeeze(sum(sum(sum(tmp(:,:,1:kBasin,:).*...
-              cellVolume(:,:,1:kBasin)))))/eVolume(min(j,length(ke)))];
+          baNH4 = [baNH4 squeeze(sum(tmp(1:kBasin)),j).*...
+              cellVolume(1:kBasin)/basinVolume];
 
       end
 
@@ -506,48 +510,60 @@
 
       diaInfo = ncinfo(romsDiaFile{i});
 
+      tmp = ncread(romsDiaFile{i},'Zoo_respiration',[3 3 1 1],[1 1 Inf Inf]);
+
       for j=1:diaInfo.Dimensions(13).Length
 
-          tmp = ncread(romsDiaFile{i},'Zoo_respiration',[1 1 1 j],[Inf Inf Inf 1]);
+          elZoR = [elZoR squeeze(sum(tmp(ke(min(j,length(ke))):romsGrid.N,j).*...
+              cellVolume(ke(min(j,length(ke))):romsGrid.N)))/eVolume(min(j,length(ke)))];
 
-          elZoR = [elZoR squeeze(sum(sum(sum(tmp(:,:,ke(min(j,length(ke))):romsGrid.N,:).*...
-              cellVolume(:,:,ke(min(j,length(ke))):romsGrid.N)))))/eVolume(min(j,length(ke)))];
+          slZoR = [slZoR squeeze(sum(tmp(kBasin:ke(min(j,length(ke))),j).*...
+              cellVolume(kBasin:ke(min(j,length(ke))))))/slVolume(min(j,length(ke)))];
 
-          slZoR = [slZoR squeeze(sum(sum(sum(tmp(:,:,kBasin:ke(min(j,length(ke))),:).*...
-              cellVolume(:,:,kBasin:ke(min(j,length(ke))))))))/slVolume(min(j,length(ke)))];
+          baZoR = [baZoR squeeze(sum(tmp(1:kBasin)),j).*...
+              cellVolume(1:kBasin)/basinVolume];
 
-          baZoR = [baZoR squeeze(sum(sum(sum(tmp(:,:,1:kBasin,:).*...
-              cellVolume(:,:,1:kBasin)))))/basinVolume];
+      end
 
-          tmp = ncread(romsDiaFile{i},'Bac_respiration',[1 1 1 j],[Inf Inf Inf 1]);
+      tmp = ncread(romsDiaFile{i},'Bac_respiration',[3 3 1 1],[1 1 Inf Inf]);
 
-          elBaR = [elBaR squeeze(sum(sum(sum(tmp(:,:,ke(min(j,length(ke))):romsGrid.N,:).*...
-              cellVolume(:,:,ke(min(j,length(ke))):romsGrid.N)))))/eVolume(min(j,length(ke)))];
+      for j=1:diaInfo.Dimensions(13).Length
 
-          slBaR = [slBaR squeeze(sum(sum(sum(tmp(:,:,kBasin:ke(min(j,length(ke))),:).*...
-              cellVolume(:,:,kBasin:ke(min(j,length(ke))))))))/slVolume(min(j,length(ke)))];
+          elBaR = [elBaR squeeze(sum(tmp(ke(min(j,length(ke))):romsGrid.N,j).*...
+              cellVolume(ke(min(j,length(ke))):romsGrid.N)))/eVolume(min(j,length(ke)))];
 
-          baBaR = [baBaR squeeze(sum(sum(sum(tmp(:,:,1:kBasin,:).*...
-              cellVolume(:,:,1:kBasin)))))/basinVolume];
+          slBaR = [slBaR squeeze(sum(tmp(kBasin:ke(min(j,length(ke))),j).*...
+              cellVolume(kBasin:ke(min(j,length(ke))))))/slVolume(min(j,length(ke)))];
 
-          tmp = ncread(romsDiaFile{i},'Nitrif_flux',[1 1 1 j],[Inf Inf Inf 1]);
+          baBaR = [baBaR squeeze(sum(tmp(1:kBasin)),j).*...
+              cellVolume(1:kBasin)/basinVolume];
 
-          elNit = [elNit 2.0*squeeze(sum(sum(sum(tmp(:,:,ke(min(j,length(ke))):romsGrid.N,:).*...
-              cellVolume(:,:,ke(min(j,length(ke))):romsGrid.N)))))/eVolume(min(j,length(ke)))];
+      end
 
-          slNit = [slNit 2.0*squeeze(sum(sum(sum(tmp(:,:,kBasin:ke(min(j,length(ke))),:).*...
-              cellVolume(:,:,kBasin:ke(min(j,length(ke))))))))/slVolume(min(j,length(ke)))];
+      tmp = ncread(romsDiaFile{i},'Nitrif_flux',[3 3 1 1],[1 1 Inf Inf]);
 
-          baNit = [baNit 2.0*squeeze(sum(sum(sum(tmp(:,:,1:kBasin,:).*...
-              cellVolume(:,:,1:kBasin)))))/basinVolume];
+      for j=1:diaInfo.Dimensions(13).Length
 
-          tmp = ncread(romsDiaFile{i},'OM_sinking',[1 1 1 j],[Inf Inf Inf 1]);
+          elNit = [elNit 2.0*squeeze(sum(tmp(ke(min(j,length(ke))):romsGrid.N,j).*...
+              cellVolume(ke(min(j,length(ke))):romsGrid.N)))/eVolume(min(j,length(ke)))];
 
-          slVOM = [slVOM squeeze(sum(sum(sum(tmp(:,:,ke(min(j,length(ke))),:)))))];
+          slNit = [slNit 2.0*squeeze(sum(tmp(kBasin:ke(min(j,length(ke))),j).*...
+              cellVolume(kBasin:ke(min(j,length(ke))))))/slVolume(min(j,length(ke)))];
 
-          baVOM = [baVOM squeeze(sum(sum(sum(tmp(:,:,kBasin,:)))))];
+          baNit = [baNit 2.0*squeeze(sum(tmp(1:kBasin)),j).*...
+              cellVolume(1:kBasin)/basinVolume];
 
-          sdVOM = [sdVOM squeeze(sum(sum(sum(tmp(:,:,1,:)))))];
+      end
+
+      tmp = ncread(romsDiaFile{i},'OM_sinking',[3 3 1 1],[1 1 Inf Inf]);
+
+      for j=1:diaInfo.Dimensions(13).Length
+
+          slVOM = [slVOM squeeze(sum(sum(sum(tmp(ke(min(j,length(ke))),:)))))];
+
+          baVOM = [baVOM squeeze(sum(sum(sum(tmp(kBasin,:)))))];
+
+          sdVOM = [sdVOM squeeze(sum(sum(sum(tmp(1,:)))))];
          
       end
 
