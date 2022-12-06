@@ -640,7 +640,7 @@
   set(gcf,'Position', posMap3)
 
   print('euphoticLayerO2Budget.eps','-r200', '-depsc2')
-  close
+  close all
 
   
     
